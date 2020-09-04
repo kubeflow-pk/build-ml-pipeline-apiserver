@@ -3,7 +3,7 @@ dist: bionic
 env:
   global:
     - IMAGE_NAME=pkskubeflow/ml-pipeline-api-server:0.2.5
-    - CODE_TAG=master
+    - CODE_TAG=arm64_build
 
 arch:
   - arm64
@@ -12,11 +12,11 @@ services:
   - docker
 
 before_install:
-  - git clone -b ${CODE_TAG} --depth 1 https://github.com/kubeflow-pk/pipelines.git
+  - git clone -b ${CODE_TAG} --depth 1 https://github.com/MrXinWang/pipelines.git
 
 script:
 
   - cd pipelines
-  - docker build -t ${IMAGE_NAME} -f backend/Dockerfile .
+  - docker build -t ${IMAGE_NAME} -f backend/Dockerfile.arm64base .
   - docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}
   - docker push ${IMAGE_NAME}
