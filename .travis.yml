@@ -13,6 +13,8 @@ services:
 
 before_install:
   - git clone -b ${CODE_TAG} --depth 1 https://github.com/MrXinWang/pipelines.git
+  
+install: travis_wait 60 mvn install
 
 script:
 
