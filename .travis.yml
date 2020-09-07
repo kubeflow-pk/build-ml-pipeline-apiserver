@@ -13,12 +13,10 @@ services:
 
 before_install:
   - git clone -b ${CODE_TAG} --depth 1 https://github.com/MrXinWang/pipelines.git
-  
-install: travis_wait 60 mvn install
 
 script:
 
   - cd pipelines
-  - docker build -t ${IMAGE_NAME} -f backend/Dockerfile.arm64base .
+  - travis_wait 60 docker build -t ${IMAGE_NAME} -f backend/Dockerfile.arm64base .
   - docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}
   - docker push ${IMAGE_NAME}
