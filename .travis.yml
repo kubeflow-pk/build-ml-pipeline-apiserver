@@ -7,8 +7,6 @@ env:
     - REPO=${ORG}/ml-pipeline-api-server
     - CODE_TAG=1.0.0
     - IMAGE_TAG=${REGISTRY}/${REPO}:${CODE_TAG}
-#    - IMAGE_NAME=pkskubeflow/ml-pipeline-api-server:0.2.5
-#    - CODE_TAG=0.2.5
 
 services:
   - docker
@@ -32,6 +30,4 @@ before_install:
 
 script:
   - cd pipelines
-  - docker buildx build --push --platform linux/amd64,linux/arm64 -t ${IMAGE_TAG} -f backend/Dockerfile .
-#  - docker build -t ${IMAGE_NAME} -f backend/Dockerfile .
-#  - docker push ${IMAGE_NAME}
+  - docker buildx build --push --platform linux/amd64 -t ${IMAGE_TAG} -f backend/Dockerfile .
