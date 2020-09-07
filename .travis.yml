@@ -2,21 +2,36 @@ dist: bionic
 
 env:
   global:
-    - IMAGE_NAME=pkskubeflow/ml-pipeline-api-server:0.2.5
-    - CODE_TAG=0.2.5
-
-arch:
-  - arm64
+    - ORG=pkskubeflow
+    - REGISTRY="docker.io"
+    - REPO=${ORG}/ml-pipeline-api-server
+    - CODE_TAG=v1.0.0
+#    - IMAGE_TAG=${REGISTRY}/${REPO}:${CODE_TAG}
+#    - IMAGE_NAME=pkskubeflow/ml-pipeline-api-server:0.2.5
+#    - CODE_TAG=0.2.5
 
 services:
   - docker
 
 before_install:
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=${TRAVIS_CPU_ARCH}] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce qemu-user-static
+  - wget https://github.com/docker/buildx/releases/download/v0.4.2/buildx-v0.4.2.linux-${TRAVIS_CPU_ARCH}
+  - chmod a+x buildx-v0.4.2.linux-${TRAVIS_CPU_ARCH}
+  - mkdir -p ~/.docker/cli-plugins
+  - mv buildx-v0.4.2.linux-${TRAVIS_CPU_ARCH} ~/.docker/cli-plugins/docker-buildx
+  - docker version
+  - docker buildx version
+  - docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}
+  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+  - docker buildx create --use
+  - docker buildx inspect --bootstrap
   - git clone -b ${CODE_TAG} --depth 1 https://github.com/kubeflow/pipelines.git
 
 script:
-
   - cd pipelines
-  - docker build -t ${IMAGE_NAME} -f backend/Dockerfile .
-  - docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}
-  - docker push ${IMAGE_NAME}
+  - docker buildx build --push --platform linux/amd64,linux/arm64 -t ${IMAGE_TAG} -f backend/Dockerfile .
+#  - docker build -t ${IMAGE_NAME} -f backend/Dockerfile .
+#  - docker push ${IMAGE_NAME}
