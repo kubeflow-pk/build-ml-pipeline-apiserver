@@ -17,6 +17,6 @@ before_install:
 script:
 
   - cd pipelines
-  - travis_wait 60 docker build -t ${IMAGE_NAME} -f backend/Dockerfile .
+  - docker build -t ${IMAGE_NAME} -f backend/Dockerfile .
   - docker login -u ${DOCKER_USER} -p ${DOCKER_PWD}
   - docker push ${IMAGE_NAME}
