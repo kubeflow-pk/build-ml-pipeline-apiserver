@@ -10,7 +10,7 @@ env:
 
 arch:
   - amd64
-  - arm64
+#  - arm64
   
 services:
   - docker
@@ -34,7 +34,7 @@ before_install:
 
 script:
   - cd pipelines
-  - if [ "${TRAVIS_CPU_ARCH}" = "amd64" ]; then \
+  - if [ "${TRAVIS_CPU_ARCH}" = "amd64" ]; then
       docker buildx build --push --platform linux/amd64 -t ${IMAGE_TAG} -f backend/Dockerfile . ;
     else
       docker buildx build --push --platform linux/arm64 -t ${IMAGE_TAG} -f backend/Dockerfile . ;
