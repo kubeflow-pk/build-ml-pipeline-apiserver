@@ -6,7 +6,7 @@ env:
     - REGISTRY="docker.io"
     - REPO=${ORG}/ml-pipeline-api-server
     - CODE_TAG=1.0.0
-#    - IMAGE_TAG=${REGISTRY}/${REPO}:${CODE_TAG}
+    - IMAGE_TAG=${REGISTRY}/${REPO}:${CODE_TAG}
 #    - IMAGE_NAME=pkskubeflow/ml-pipeline-api-server:0.2.5
 #    - CODE_TAG=0.2.5
 
